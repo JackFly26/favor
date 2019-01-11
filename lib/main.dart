@@ -26,60 +26,69 @@ class AddFavorState extends State<AddFavor> {
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   String favor, ower, receiver;
 
-  String _isValid(String val) {
-    return val.isEmpty ? 'Name is required' : null;
-  }
-
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
         appBar: new AppBar(title: new Text("Submit a Favor")),
-        body: new Container(
-            padding: new EdgeInsets.all(20.0),
-            child: Form(
-                autovalidate: true,
-                key: _formKey,
-                child: Column(
-                  children: <Widget>[
-                    new TextFormField(
-                        validator: _isValid,
-                        onSaved: (fav) => favor = fav,
-                        keyboardType: TextInputType.text,
-                        decoration:
-                            new InputDecoration(labelText: "Favor Name")),
-                    new TextFormField(
-                        validator: _isValid,
-                        onSaved: (owe) => ower = owe,
-                        keyboardType: TextInputType.text,
-                        decoration: new InputDecoration(
-                            labelText: "Ower of the Favor")),
-                    new TextFormField(
-                        validator: _isValid,
-                        onSaved: (rec) => receiver = rec,
-                        keyboardType: TextInputType.text,
-                        decoration: new InputDecoration(
-                            labelText: "Reciever of the Favor")),
-                    new Container(
-                      child: new RaisedButton(
-                        child: new Text(
-                          'Add',
-                          style: new TextStyle(color: Colors.white),
+        body: Builder(
+          builder: (context) => Container(
+              padding: new EdgeInsets.all(20.0),
+              child: Form(
+                  autovalidate: false,
+                  key: _formKey,
+                  child: Column(
+                    children: <Widget>[
+                      new TextFormField(
+                          validator: (val) =>
+                              val.isEmpty ? 'Name is required' : null,
+                          onSaved: (fav) => favor = fav,
+                          keyboardType: TextInputType.text,
+                          decoration:
+                              new InputDecoration(labelText: "Favor Name")),
+                      new TextFormField(
+                          validator: (val) =>
+                              val.isEmpty ? 'Ower is required' : null,
+                          onSaved: (owe) => ower = owe,
+                          keyboardType: TextInputType.text,
+                          decoration: new InputDecoration(
+                              labelText: "Ower of the Favor")),
+                      new TextFormField(
+                          validator: (val) =>
+                              val.isEmpty ? 'Receiver is required' : null,
+                          onSaved: (rec) => receiver = rec,
+                          keyboardType: TextInputType.text,
+                          decoration: new InputDecoration(
+                              labelText: "Reciever of the Favor")),
+                      new Container(
+                        child: new RaisedButton(
+                          child: new Text(
+                            'Add',
+                            style: new TextStyle(color: Colors.white),
+                          ),
+                          onPressed: () {
+                            if (_formKey.currentState.validate()) {
+                              _formKey.currentState.save();
+                              Firestore.instance.collection('favor').add({
+                                "Favor": favor,
+                                "Ower": ower,
+                                "Receiver": receiver
+                              });
+                              Navigator.pop(context);
+                            } else {
+                              Scaffold.of(context).showSnackBar(SnackBar(
+                                content: Text("Please fill out all of the fields."),
+                                backgroundColor: Colors.redAccent,
+                                duration: Duration(seconds: 2),
+                              ));
+                            }
+                          },
+                          color: Colors.deepOrangeAccent,
                         ),
-                        onPressed: () {
-                          _formKey.currentState.save();
-                          Firestore.instance.collection('favor').add({
-                            "Favor": favor,
-                            "Ower": ower,
-                            "Receiver": receiver
-                          });
-                          Navigator.pop(context);
-                        },
-                        color: Colors.blue,
-                      ),
-                      margin: new EdgeInsets.only(top: 20.0),
-                    )
-                  ],
-                ))));
+                        margin: new EdgeInsets.only(top: 20.0),
+                      )
+                    ],
+                  ))),
+        ));
   }
 }
 
@@ -103,9 +112,9 @@ class MyHomePage extends StatelessWidget {
                 itemBuilder: (context, index) {
                   DocumentSnapshot document = snapshot.data.documents[index];
                   return Dismissible(
-                      background: Container(color: Colors.red),
-                      key: new Key('dismissible'),
-                      child: ListTile(
+                    background: Container(color: Colors.red),
+                    key: new Key('dismissible'),
+                    child: ListTile(
                         key: new ValueKey(document.documentID),
                         title: new Container(
                           decoration: new BoxDecoration(
@@ -125,16 +134,15 @@ class MyHomePage extends StatelessWidget {
                               ),
                             ],
                           ),
-                        )
-                        ),
-                        onDismissed: (dir) => Firestore.instance
-                                .runTransaction((transaction) async {
-                              await Firestore.instance
-                                  .collection('favor')
-                                  .document(document.documentID)
-                                  .delete();
-                            }),
-                      );
+                        )),
+                    onDismissed: (dir) =>
+                        Firestore.instance.runTransaction((transaction) async {
+                          await Firestore.instance
+                              .collection('favor')
+                              .document(document.documentID)
+                              .delete();
+                        }),
+                  );
                 });
           }),
       floatingActionButton: new FloatingActionButton(
