@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'addfavor.dart';
 import 'package:favor/loginpage.dart';
+
 class MyHomePage extends StatelessWidget {
-  const MyHomePage({Key key, this.userId, this.onSignedOut, this.auth}) : super(key: key);
+  const MyHomePage({Key key, this.userId, this.onSignedOut, this.auth})
+      : super(key: key);
   final BaseAuth auth;
   final String userId;
   final VoidCallback onSignedOut;
@@ -11,11 +13,15 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Row(
+      appBar: AppBar(
+          title: Row(
         children: <Widget>[
           Expanded(child: Text("Favor")),
           FlatButton(
-            child: Text("Log out", style: TextStyle(color: Colors.white),),
+            child: Text(
+              "Log out",
+              style: TextStyle(color: Colors.white),
+            ),
             onPressed: onSignedOut,
           )
         ],
@@ -37,8 +43,7 @@ class MyHomePage extends StatelessWidget {
                         key: ValueKey(document.documentID),
                         title: Container(
                           decoration: BoxDecoration(
-                            border:
-                                Border.all(color: const Color(0x80000000)),
+                            border: Border.all(color: const Color(0x80000000)),
                             borderRadius: BorderRadius.circular(5.0),
                           ),
                           padding: const EdgeInsets.all(10.0),
@@ -66,8 +71,8 @@ class MyHomePage extends StatelessWidget {
           }),
       floatingActionButton: FloatingActionButton(
           onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => AddFavor()));
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => AddFavor()));
           },
           tooltip: "Create a Favor",
           child: Icon(Icons.add)),

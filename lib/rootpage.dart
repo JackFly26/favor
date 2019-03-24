@@ -37,14 +37,13 @@ class _RootPageState extends State<RootPage> {
   }
 
   void _onLoggedIn() {
-    widget.auth.getCurrentUser().then((user){
+    widget.auth.getCurrentUser().then((user) {
       setState(() {
         _userId = user.uid;
       });
     });
     setState(() {
       authStatus = AuthStatus.LOGGED_IN;
-
     });
   }
 
@@ -83,7 +82,8 @@ class _RootPageState extends State<RootPage> {
             auth: widget.auth,
             onSignedOut: _onSignedOut,
           );
-        } else return _buildWaitingScreen();
+        } else
+          return _buildWaitingScreen();
         break;
       default:
         return _buildWaitingScreen();

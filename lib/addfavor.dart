@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 class AddFavor extends StatefulWidget {
   @override
   AddFavorState createState() {
@@ -28,15 +29,14 @@ class AddFavorState extends State<AddFavor> {
                               val.isEmpty ? 'Name is required' : null,
                           onSaved: (fav) => favor = fav,
                           keyboardType: TextInputType.text,
-                          decoration:
-                              InputDecoration(labelText: "Favor Name")),
+                          decoration: InputDecoration(labelText: "Favor Name")),
                       TextFormField(
                           validator: (val) =>
                               val.isEmpty ? 'Ower is required' : null,
                           onSaved: (owe) => ower = owe,
                           keyboardType: TextInputType.text,
-                          decoration: InputDecoration(
-                              labelText: "Ower of the Favor")),
+                          decoration:
+                              InputDecoration(labelText: "Ower of the Favor")),
                       TextFormField(
                           validator: (val) =>
                               val.isEmpty ? 'Receiver is required' : null,
@@ -61,7 +61,8 @@ class AddFavorState extends State<AddFavor> {
                               Navigator.pop(context);
                             } else {
                               Scaffold.of(context).showSnackBar(SnackBar(
-                                content: Text("Please fill out all of the fields."),
+                                content:
+                                    Text("Please fill out all of the fields."),
                                 backgroundColor: Colors.redAccent,
                                 duration: Duration(seconds: 2),
                               ));
